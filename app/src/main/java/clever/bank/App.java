@@ -64,7 +64,7 @@ public class App {
                 }
 
                 System.out.println("Выберите действие: ");
-                System.out.println("Пополнить счет (1) Снять сумму (2) Осуществить перевод (3) Выход(4)");
+                System.out.println("Пополнить счет (1) Снять сумму (2) Осуществить перевод (3) Выход (4)");
                 choice = sc.nextInt();
                 sc.nextLine();
                 System.out.println("Введите номер Вашего счета");

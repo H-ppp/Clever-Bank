@@ -41,7 +41,7 @@ public class Transaction {
         try {
 
             con = DriverManager.getConnection(url, user, password);
-
+            con.setAutoCommit(false); // to enable transactional behavior
             java.util.Date utilDate = Calendar.getInstance().getTime();
             java.sql.Date startDate = new java.sql.Date(utilDate.getTime());
 
@@ -72,8 +72,18 @@ public class Transaction {
             stmt.setString(3, ac.getAccId());
             stmt.setDouble(4, addTobalance);
             stmt.executeUpdate();
+            con.commit();
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
+            try {
+                con.rollback();
+            } catch (SQLException se) {
+            }
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException se) {
+            }
         }
 
     }
@@ -82,6 +92,7 @@ public class Transaction {
         try {
 
             con = DriverManager.getConnection(url, user, password);
+            con.setAutoCommit(false);
             java.util.Date utilDate = Calendar.getInstance().getTime();
             java.sql.Date startDate = new java.sql.Date(utilDate.getTime());
 
@@ -113,10 +124,21 @@ public class Transaction {
             stmt.setString(3, ac.getAccId());
             stmt.setDouble(4, balanceToSubstract);
             stmt.executeUpdate();
+            con.commit();
 
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
+            try {
+                con.rollback();
+            } catch (SQLException se) {
+            }
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException se) {
+            }
         }
+
     }
 
     void isEnough(Account ac, Double amountToTransfer) throws IllegalArgumentException {
@@ -133,6 +155,7 @@ public class Transaction {
         Account acb2 = new Account();
         try {
             con = DriverManager.getConnection(url, user, password);
+            con.setAutoCommit(false);
             System.out.println("Введите номер счета, на который Вы желаете перевести средства");
             String acc_id = sc.nextLine();
             statement = con.prepareStatement("SELECT * from bank_acc_balance WHERE  acc_id = ?");
@@ -193,13 +216,16 @@ public class Transaction {
             stmt.setString(3, acb2.getAccId());
             stmt.setDouble(4, amount);
             stmt.executeUpdate();
-
+            con.commit();
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
+            try {
+                con.rollback();
+            } catch (SQLException se) {
+            }
         }
 
         finally {
-
             try {
                 con.close();
             } catch (SQLException se) {
